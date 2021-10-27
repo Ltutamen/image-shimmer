@@ -20,50 +20,49 @@ pub fn image_into_bytes(config: &Config) -> Vec<u8> {
 }
 
 pub struct DimmerApplicationState {
-    //  pub bit_state: Texture2D,
-    pub bit_state: [u8; Config::MAX_IMG_WIGHT * 4],
-    pub transform: fn(&mut [u8; Config::MAX_IMG_WIGHT * 4]) -> [u8; Config::MAX_IMG_WIGHT * 4],
+    pub bit_state: Vec<u8>,
+    pub transform: fn(&mut Vec<u8>) -> (),
 }
 
 impl DimmerApplicationState {
     
-    pub fn new() -> DimmerApplicationState {
+    pub fn new(img_wight: usize) -> DimmerApplicationState {
 
-        let bytes = &mut[0 as u8; Config::MAX_IMG_WIGHT * 4];
+        //  4 u8 in f32, 4 f32 in color
+        let mut bit_state = Vec::<u8>::with_capacity(img_wight * 4 * 4);
 
         //  todo write start state
-        for i in 0..Config::MAX_IMG_WIGHT {
+        for i in 0..img_wight {
             if i % 2 == 0 {
-                bytes[i * 4] = 177;
+                bit_state.push(144);
+            } else {
+                bit_state.push(0);
             }
+            bit_state.push(0);
+            bit_state.push(0);
+            bit_state.push(0);
         }
 
         DimmerApplicationState {
-            //  bit_state: (Texture2D::from_rgba8(1280, 1, bytes))
-            bit_state: *bytes,
-            transform: (|bytes | {
-                bytes.clone()
-            })
-        }
-    }
-
-    pub fn new_with(
-        init_state : Vec<bool>,
-        func: fn(&mut [u8; Config::MAX_IMG_WIGHT * 4]) -> [u8; Config::MAX_IMG_WIGHT * 4]
-    ) {
-        let bytes = &mut[0 as u8; Config::MAX_IMG_WIGHT * 4];
-
-        for (i, val) in init_state.iter().enumerate() {
-            bytes[i] = if *val {
-                144
-            } else { 0 } as u8;
-
+            bit_state,
+            transform: |vec| -> () {
+                for i in vec {
+                    if *i > 0 {
+                        *i = 0;
+                    } else {
+                        *i = 144;
+                    }
+                }
+            }
         }
     }
 
     pub fn switch(&mut self) {
         let func = self.transform;
         let new_state = func(&mut self.bit_state);
-        self.bit_state = new_state;
+    }
+
+    fn set_stripe(&mut self, pos: usize, active: bool) {
+        self.bit_state[pos * 16] = 144;
     }
 }

@@ -13,6 +13,7 @@ async fn main() {
 
     loop {
         application.run_frame();
+        application.switch();
         next_frame().await
     }
 }
@@ -53,7 +54,7 @@ impl Application {
             fs::read_to_string("src/shaders/vertex.vs").expect("Vertex shader file not found!").as_str(),
             fs::read_to_string("src/shaders/fragment.fs").expect("Fragment shader file not found!").as_str(),
             material_params).unwrap();
-        let state = DimmerApplicationState::new();
+        let state = DimmerApplicationState::new(texture.width() as usize);
 
         return Application{
             configuration, 
@@ -82,5 +83,11 @@ impl Application {
 
         gl_use_default_material();
 
+    }
+
+    fn switch(&mut self) {
+        let state = &mut self.state.bit_state;
+        let fun = self.state.transform;
+        fun(state)
     }
 }
