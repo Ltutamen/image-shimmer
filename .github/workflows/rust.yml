@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: install win target
+      run: rustup target add x86_64-pc-windows-gnu
     - name: Build for win x86_64
       run: cargo build --target x86_64-pc-windows-gnu --verbose
     - name: Build for linux x86_64
