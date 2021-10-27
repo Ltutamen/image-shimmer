@@ -1,0 +1,17 @@
+[package]
+name = "image_dimm"
+version = "0.0.1"
+edition = "2018"
+
+[dependencies]
+macroquad = "0.3"
+
+cgmath = "0.18"
+png = "0.17"
+time = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+ron = "0.6"
+rand = "0.8.4"
+config = "0.11.0"
+image = "0.23.14"
+bitvec = "0.22.3"
