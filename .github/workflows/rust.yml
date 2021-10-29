@@ -11,26 +11,11 @@ env:
 
 
 jobs:
-#  build-win64:
-#    runs-on: windows-latest
-#    steps:
-#      - name: install win target
-#      - uses: actions/checkout@v2
-#        run: rustup target add x86_64-pc-windows-gnu
-#
-#      - name: install toolchain for win
-#        run: rustup toolchain install stable-x86_64-pc-windows-gnu
-#
-#      - name: Build for win x86_64
-#        run: cargo build --target x86_64-pc-windows-gnu
-
   build-linux64:
     runs-on: ubuntu-latest
     steps:
       - name: Build for linux x86_64
       - uses: actions/checkout@v2
-        run: rustup target add aarch64-unknown-linux-gnu
-
-      - name: compile
-        run: cargo build --target aarch64-unknown-linux-gnu
+      - run: rustup target add aarch64-unknown-linux-gnu
+      - run: cargo build --target aarch64-unknown-linux-gnu
 
