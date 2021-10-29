@@ -25,13 +25,13 @@ pub struct DimmerApplicationState {
 
 impl DimmerApplicationState {
     
-    pub fn new(img_wight: usize) -> DimmerApplicationState {
+    pub fn new(img_width: usize) -> DimmerApplicationState {
 
         //  4 u8 in f32, 4 f32 in color
-        let mut bit_state = Vec::<u8>::with_capacity(img_wight * 4 * 4);
+        let mut bit_state = Vec::<u8>::with_capacity(img_width * 4 * 4);
 
         //  todo write start state
-        for i in 0..img_wight {
+        for i in 0..img_width {
             if i % 2 == 0 {
                 bit_state.push(144);
             } else {
