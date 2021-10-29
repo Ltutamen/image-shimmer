@@ -11,18 +11,18 @@ env:
 
 
 jobs:
-  build-win64:
-    runs-on: windows-latest
-    steps:
-      - name: install win target
-      - uses: actions/checkout@v2
-        run: rustup target add x86_64-pc-windows-gnu
-
-      - name: install toolchain for win
-        run: rustup toolchain install stable-x86_64-pc-windows-gnu
-
-      - name: Build for win x86_64
-        run: cargo build --target x86_64-pc-windows-gnu
+#  build-win64:
+#    runs-on: windows-latest
+#    steps:
+#      - name: install win target
+#      - uses: actions/checkout@v2
+#        run: rustup target add x86_64-pc-windows-gnu
+#
+#      - name: install toolchain for win
+#        run: rustup toolchain install stable-x86_64-pc-windows-gnu
+#
+#      - name: Build for win x86_64
+#        run: cargo build --target x86_64-pc-windows-gnu
 
   build-linux64:
     runs-on: ubuntu-latest
