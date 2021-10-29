@@ -1,5 +1,12 @@
 {
   "image_path": "resources/rust2.png",
   "slices_count": 24,
-  "shimmer_freq": 5
+  "shimmer_freq": 5,
+
+  "shimmer_config": {
+    "shimmer_type": "NStripe",
+    "shimmer_config": {
+      "n": 5
+    }
+  }
 }

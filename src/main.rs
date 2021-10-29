@@ -6,6 +6,7 @@ use crate::image_processing::DimmerApplicationState;
 
 mod configuration;
 mod image_processing;
+mod transformations;
 
 #[macroquad::main(win_config)]
 async fn main() {

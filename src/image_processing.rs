@@ -1,5 +1,4 @@
 use std::io::Read;
-use macroquad::prelude::Vec4;
 
 use crate::configuration::Config;
 
