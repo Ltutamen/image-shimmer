@@ -22,7 +22,6 @@ async fn main() {
         let skip = frame_end_time.duration_since(SystemTime::now())
             .unwrap();
 
-        println!("AAA:{:?}", skip);
         std::thread::sleep(skip);
         next_frame().await
     }
