@@ -12,16 +12,16 @@ static SHIMMER_CONFIG_FREQ_KEY: &str = "shimmer_config";
 static  SHIMMER_CONFIG_SHIMMER_TYPE_KEY: &str = "shimmer_type";
 static  SHIMMER_CONFIG_SHIMMER_CONFIG_KEY: &str = "shimmer_config";
 
-pub fn get_config() -> Result<Config, ConfigError> {
+pub fn get_config() -> (WinConfig, ShimmerConfig) {
     let config_file = config::File::with_name(SETTINGS_FILE);
 
     let mut config = config::Config::default();
 
-    config.merge(config_file)
-        .map(|conf |validate_config(conf))
+    let conf = config.merge(config_file).unwrap();
+    validate_config(conf)
 }
 
-pub fn validate_config(config: &config::Config) -> Config {
+pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
 
     let img_path = config.get_str(IMAGE_FILE_KEY);
     let slices_count = config.get_int(SLICES_COUNT_KEY);
@@ -33,28 +33,26 @@ pub fn validate_config(config: &config::Config) -> Config {
 
     let shimmer_config_config_ = shimmer_config_config.into_table().unwrap();
 
-    return Config{
+    return ( WinConfig {
         filepath: img_path.unwrap(),
         slices_cont: slices_count.unwrap() as i32,
         dimm_freq: shimmer_freq.unwrap() as i32,
-        scale: 1.0,
-        shimmer_config: ShimmerConfig {
+        scale: 1.0, },
+    ShimmerConfig {
             shimmer_type: ShimmerType::from_str(shimmer_config_type.as_str()).unwrap(),
             config: shimmer_config_config_,
-        },
-    }
+        },)
 }
 
-pub struct Config {
+pub struct WinConfig {
     pub filepath: String,
     pub slices_cont: i32,
     pub dimm_freq: i32,
     pub scale: f32,
-    pub shimmer_config: ShimmerConfig,
 }
 
 pub enum ShimmerType {
-    NStripe,
+    NMStripe,
 }
 
 impl FromStr for ShimmerType {
@@ -62,13 +60,13 @@ impl FromStr for ShimmerType {
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         match input {
-            "NStripe" => Ok(ShimmerType::NStripe),
+            "NMStripe" => Ok(ShimmerType::NMStripe),
             _ => Err(()),
         }
     }
 }
 
 pub struct ShimmerConfig {
-    shimmer_type: ShimmerType,
-    config: HashMap<String, Value>,
+    pub shimmer_type: ShimmerType,
+    pub config: HashMap<String, Value>,
 }

@@ -1,6 +1,9 @@
 # image-shimmer
 
-TODO:
-- Add more configurations
+Features:
+- ✅ Build pipelines
+- Add more configurations:
+  - ✅ M-N List
+  - Array configured
 - Add configuration for frame time
 - Fix image positioning

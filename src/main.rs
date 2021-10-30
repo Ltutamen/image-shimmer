@@ -1,7 +1,7 @@
 use std::fs;
 use macroquad::prelude::*;
 use image::ImageFormat::Png;
-use crate::configuration::Config;
+use crate::configuration::WinConfig;
 use crate::image_processing::DimmerApplicationState;
 
 mod configuration;
@@ -20,7 +20,7 @@ async fn main() {
 }
 
 fn win_config() -> Conf {
-    let img_filepath= configuration::get_config().unwrap().filepath;
+    let img_filepath = configuration::get_config().0.filepath;
     let img = image::io::Reader::open(img_filepath).unwrap();
     let dimensions = img.into_dimensions().unwrap();
 
@@ -33,7 +33,7 @@ fn win_config() -> Conf {
 }
 
 struct Application {
-    configuration: Config,
+    configuration: WinConfig,
     texture: Texture2D,
     material : Material,
     state: DimmerApplicationState,
@@ -42,8 +42,8 @@ struct Application {
 
 impl Application {
     fn new() -> Application {
-        let configuration = configuration::get_config().unwrap();
-        let texture_bytes = image_processing::image_into_bytes(&configuration);
+        let (configuration, shimmer_config) = configuration::get_config();
+        let texture_bytes = image_processing::image_into_bytes(&configuration.filepath);
         let texture = Texture2D::from_file_with_format(texture_bytes.as_slice(), Option::Some(Png));
         let material_params: MaterialParams = MaterialParams{
             pipeline_params: Default::default(),
@@ -55,10 +55,10 @@ impl Application {
             fs::read_to_string("src/shaders/vertex.vs").expect("Vertex shader file not found!").as_str(),
             fs::read_to_string("src/shaders/fragment.fs").expect("Fragment shader file not found!").as_str(),
             material_params).unwrap();
-        let state = DimmerApplicationState::new(texture.width() as usize);
+        let state = DimmerApplicationState::from_config(texture.width() as usize, shimmer_config);
 
         return Application{
-            configuration, 
+            configuration,
             texture,
             material,
             state,
@@ -75,7 +75,7 @@ impl Application {
             let wight = texture.width() as usize;
             material.set_texture("image", *texture);
             material.set_texture("stripes",
-                                 Texture2D::from_rgba8(wight as u16, 1, &bit_state[0..wight * 4])); //  todo slice from vector
+                                 Texture2D::from_rgba8(wight as u16, 1, &bit_state[0..wight * 4]));
         }
 
         gl_use_material(*material);
