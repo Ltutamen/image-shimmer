@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 use std::str::FromStr;
 
-use config::{ConfigError, Value};
+use config::Value;
 
 static SETTINGS_FILE: &str = "resources/config.json";
 static IMAGE_FILE_KEY: &str = "image_path";
 static SLICES_COUNT_KEY: &str = "slices_count";
-static SHIMMER_FREQ_KEY: &str = "shimmer_freq";
+static FRAME_TIME_KEY: &str = "frame_time";
 
 static SHIMMER_CONFIG_FREQ_KEY: &str = "shimmer_config";
 static  SHIMMER_CONFIG_SHIMMER_TYPE_KEY: &str = "shimmer_type";
@@ -25,7 +25,7 @@ pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
 
     let img_path = config.get_str(IMAGE_FILE_KEY);
     let slices_count = config.get_int(SLICES_COUNT_KEY);
-    let shimmer_freq = config.get_int(SHIMMER_FREQ_KEY);
+    let frame_time = config.get_int(FRAME_TIME_KEY);
 
     let shimmer_config_map = &config.get_table(SHIMMER_CONFIG_FREQ_KEY).unwrap();
     let shimmer_config_type = shimmer_config_map.get(SHIMMER_CONFIG_SHIMMER_TYPE_KEY).unwrap().clone().into_str().unwrap();
@@ -36,7 +36,7 @@ pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
     return ( WinConfig {
         filepath: img_path.unwrap(),
         slices_cont: slices_count.unwrap() as i32,
-        dimm_freq: shimmer_freq.unwrap() as i32,
+        frame_time: frame_time.unwrap() as i32,
         scale: 1.0, },
     ShimmerConfig {
             shimmer_type: ShimmerType::from_str(shimmer_config_type.as_str()).unwrap(),
@@ -47,7 +47,7 @@ pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
 pub struct WinConfig {
     pub filepath: String,
     pub slices_cont: i32,
-    pub dimm_freq: i32,
+    pub frame_time: i32,
     pub scale: f32,
 }
 

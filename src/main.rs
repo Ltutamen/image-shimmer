@@ -1,20 +1,22 @@
 use std::fs;
 use macroquad::prelude::*;
 use image::ImageFormat::Png;
+use std::time::Duration;
 use crate::configuration::WinConfig;
 use crate::image_processing::DimmerApplicationState;
 
 mod configuration;
 mod image_processing;
-mod transformations;
 
 #[macroquad::main(win_config)]
 async fn main() {
     let mut application = Application::new();
+    let frame_time = application.configuration.frame_time;
 
     loop {
         application.run_frame();
         application.switch();
+        std::thread::sleep(Duration::from_millis(frame_time as u64));
         next_frame().await
     }
 }
@@ -28,6 +30,7 @@ fn win_config() -> Conf {
         window_width: dimensions.0 as i32,
         window_height: dimensions.1 as i32,
         window_resizable: false,
+        sample_count: 0,
         ..Default::default()
     }
 }
