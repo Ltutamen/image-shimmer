@@ -1,9 +1,11 @@
 use std::fs;
+use std::ops::Add;
 use macroquad::prelude::*;
 use image::ImageFormat::Png;
 use std::time::Duration;
 use crate::configuration::WinConfig;
 use crate::image_processing::DimmerApplicationState;
+use std::time::SystemTime;
 
 mod configuration;
 mod image_processing;
@@ -11,12 +13,17 @@ mod image_processing;
 #[macroquad::main(win_config)]
 async fn main() {
     let mut application = Application::new();
-    let frame_time = application.configuration.frame_time;
+    let frame_time = application.configuration.frame_time as u64;
 
     loop {
+        let frame_end_time = SystemTime::now().add(Duration::from_millis(frame_time));
         application.run_frame();
         application.switch();
-        std::thread::sleep(Duration::from_millis(frame_time as u64));
+        let skip = frame_end_time.duration_since(SystemTime::now())
+            .unwrap();
+
+        println!("AAA:{:?}", skip);
+        std::thread::sleep(skip);
         next_frame().await
     }
 }
