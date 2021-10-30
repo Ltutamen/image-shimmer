@@ -5,7 +5,7 @@ use image::ImageFormat::Png;
 use std::time::Duration;
 use crate::configuration::WinConfig;
 use crate::image_processing::DimmerApplicationState;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::SystemTime;
 
 mod configuration;
 mod image_processing;
@@ -17,6 +17,7 @@ async fn main() {
 
     loop {
         let frame_end_time = SystemTime::now().add(Duration::from_millis(frame_time));
+        application.run_frame();
         application.switch();
         let skip = frame_end_time.duration_since(SystemTime::now())
             .unwrap();
