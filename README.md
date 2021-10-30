@@ -6,4 +6,4 @@ Features:
   - ✅ M-N List
   - Array configured
 - ✅ Add configuration for frame time
-- Fix image positioning
+- ✅ Fix image positioning
