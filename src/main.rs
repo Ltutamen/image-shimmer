@@ -4,11 +4,12 @@ use macroquad::prelude::*;
 use image::ImageFormat::Png;
 use std::time::Duration;
 use crate::configuration::WinConfig;
-use crate::image_processing::DimmerApplicationState;
+use crate::image_processing::{DimmerApplicationState, Vec4f};
 use std::time::SystemTime;
 
 mod configuration;
 mod image_processing;
+
 
 #[macroquad::main(win_config)]
 async fn main() {
@@ -64,7 +65,7 @@ impl Application {
             fs::read_to_string("src/shaders/vertex.vs").expect("Vertex shader file not found!").as_str(),
             fs::read_to_string("src/shaders/fragment.fs").expect("Fragment shader file not found!").as_str(),
             material_params).unwrap();
-        let state = DimmerApplicationState::from_config(texture.width() as usize, shimmer_config);
+        let state = DimmerApplicationState::new(texture.width() as usize, shimmer_config);
 
         return Application{
             configuration,
@@ -74,17 +75,16 @@ impl Application {
         }
     }
 
-    fn run_frame(&self) {
+    fn run_frame(&mut self) {
         let material = &self.material;
         let texture = &self.texture;
-        let bit_state = &self.state.bit_state;
+        let image_wight = texture.width() as u16;
         clear_background(BLACK);
 
         {
-            let wight = texture.width() as usize;
             material.set_texture("image", *texture);
             material.set_texture("stripes",
-                                 Texture2D::from_rgba8(wight as u16, 1, &bit_state[0..wight * 4]));
+                                 Texture2D::from_rgba8(image_wight, 1, &Application::convert_to_bytes(&self.state.bit_state)));
         }
 
         gl_use_material(*material);
@@ -93,6 +93,41 @@ impl Application {
 
         gl_use_default_material();
 
+    }
+
+    fn convert_to_bytes(colors : &Vec<Vec4f>) -> Vec<u8> {
+        let byte_vec_size = colors.len() * 4;
+        let mut byte_vec = Vec::<u8>::with_capacity(byte_vec_size);
+
+
+        Application::push_vec_vec4f(colors, &mut byte_vec);
+
+        byte_vec
+    }
+
+    fn push_vec_vec4f<'vec>(colors : &Vec<Vec4f>, destination: &'vec mut Vec::<u8>) -> &'vec mut Vec::<u8> {
+        for color in colors {
+            Application::push_vec4f(color, destination);
+        }
+
+        destination
+    }
+
+    fn push_vec4f<'vec>(vec : & Vec4f, destination: &'vec mut Vec::<u8>) -> &'vec mut Vec::<u8> {
+        Application::push_float(vec.x, destination);
+        Application::push_float(vec.y, destination);
+        Application::push_float(vec.z, destination);
+        Application::push_float(vec.a, destination);
+
+        destination
+    }
+
+    //  float[0. -> 1.] -> u8[0 -> 255]
+    fn push_float(val: f32, destination: &mut Vec::<u8>) -> &mut Vec::<u8> {
+        let byte = (val * 255.) as u8;
+        destination.push(byte);
+
+        destination
     }
 
     fn switch(&mut self) {

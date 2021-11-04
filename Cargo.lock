@@ -338,6 +338,7 @@ name = "image_dimm"
 version = "0.0.1"
 dependencies = [
  "bitvec",
+ "byteorder",
  "cgmath",
  "config",
  "image",
@@ -345,7 +346,6 @@ dependencies = [
  "png 0.17.1",
  "rand",
  "ron",
- "serde 1.0.130",
  "time",
 ]
 

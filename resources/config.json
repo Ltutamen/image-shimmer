@@ -2,7 +2,6 @@
   "image_path": "resources/rust2.png",
   "slices_count": 24,
   "frame_time": 100,
-
   "shimmer_config": {
     "shimmer_type": "NMStripe",
     "shimmer_config": {

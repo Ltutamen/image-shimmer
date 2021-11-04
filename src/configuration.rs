@@ -24,7 +24,6 @@ pub fn get_config() -> (WinConfig, ShimmerConfig) {
 pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
 
     let img_path = config.get_str(IMAGE_FILE_KEY);
-    let slices_count = config.get_int(SLICES_COUNT_KEY);
     let frame_time = config.get_int(FRAME_TIME_KEY);
 
     let shimmer_config_map = &config.get_table(SHIMMER_CONFIG_FREQ_KEY).unwrap();
@@ -35,9 +34,8 @@ pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
 
     return ( WinConfig {
         filepath: img_path.unwrap(),
-        slices_cont: slices_count.unwrap() as i32,
         frame_time: frame_time.unwrap() as i32,
-        scale: 1.0, },
+    },
     ShimmerConfig {
             shimmer_type: ShimmerType::from_str(shimmer_config_type.as_str()).unwrap(),
             config: shimmer_config_config_,
@@ -46,13 +44,12 @@ pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
 
 pub struct WinConfig {
     pub filepath: String,
-    pub slices_cont: i32,
     pub frame_time: i32,
-    pub scale: f32,
 }
 
 pub enum ShimmerType {
     NMStripe,
+    Array,
 }
 
 impl FromStr for ShimmerType {
