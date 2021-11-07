@@ -1,13 +1,16 @@
 {
   "image_path": "resources/rust2.png",
   "slices_count": 24,
-  "frame_time": 100,
-
+  "frame_time": 24,
   "shimmer_config": {
-    "shimmer_type": "NMStripe",
+    "shimmer_type": "Array",
     "shimmer_config": {
-      "n": 3,
-      "m": 8
+      "stripes_count": 3,
+      "array": [
+        { "i": 0, "time": 10, "delay": 140, "trans": 121 },
+        { "i": 1, "time": 34, "delay": 140, "trans": 121 },
+        { "i": 2, "time": 61, "delay": 140, "trans": 121 }
+      ]
     }
   }
 }

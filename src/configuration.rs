@@ -5,7 +5,6 @@ use config::Value;
 
 static SETTINGS_FILE: &str = "resources/config.json";
 static IMAGE_FILE_KEY: &str = "image_path";
-static SLICES_COUNT_KEY: &str = "slices_count";
 static FRAME_TIME_KEY: &str = "frame_time";
 
 static SHIMMER_CONFIG_FREQ_KEY: &str = "shimmer_config";
@@ -24,7 +23,6 @@ pub fn get_config() -> (WinConfig, ShimmerConfig) {
 pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
 
     let img_path = config.get_str(IMAGE_FILE_KEY);
-    let slices_count = config.get_int(SLICES_COUNT_KEY);
     let frame_time = config.get_int(FRAME_TIME_KEY);
 
     let shimmer_config_map = &config.get_table(SHIMMER_CONFIG_FREQ_KEY).unwrap();
@@ -35,9 +33,8 @@ pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
 
     return ( WinConfig {
         filepath: img_path.unwrap(),
-        slices_cont: slices_count.unwrap() as i32,
         frame_time: frame_time.unwrap() as i32,
-        scale: 1.0, },
+    },
     ShimmerConfig {
             shimmer_type: ShimmerType::from_str(shimmer_config_type.as_str()).unwrap(),
             config: shimmer_config_config_,
@@ -46,22 +43,22 @@ pub fn validate_config(config: &config::Config) -> (WinConfig, ShimmerConfig) {
 
 pub struct WinConfig {
     pub filepath: String,
-    pub slices_cont: i32,
     pub frame_time: i32,
-    pub scale: f32,
 }
 
 pub enum ShimmerType {
     NMStripe,
+    Array,
 }
 
 impl FromStr for ShimmerType {
-    type Err = ();
+    type Err = String;
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         match input {
             "NMStripe" => Ok(ShimmerType::NMStripe),
-            _ => Err(()),
+            "Array" => Ok(ShimmerType::Array),
+            e => Err(format!("ShimmerType is on unknown type:{}", e)),
         }
     }
 }
