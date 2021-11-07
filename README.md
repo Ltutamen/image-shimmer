@@ -2,8 +2,8 @@
 
 Features:
 - ✅ Build pipelines
-- Add more configurations:
+- ✅ Add more configurations:
   - ✅ M-N List
-  - Array configured
+  - ✅ Array configured
 - ✅ Add configuration for frame time
 - ✅ Fix image positioning
