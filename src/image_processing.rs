@@ -95,7 +95,6 @@ impl DimmerApplicationState {
             let phase_duration = (time + duration) as u128;
             let phase = time_passed % phase_duration;
             let transparency = stripe_config.get("trans").unwrap().to_owned().into_float().unwrap();
-            println!("{}", transparency);
 
             for j in 00..strip_wight {
                 let mut vec = &mut bit_state[i * strip_wight + j];
