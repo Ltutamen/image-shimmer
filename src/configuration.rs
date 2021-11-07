@@ -5,7 +5,6 @@ use config::Value;
 
 static SETTINGS_FILE: &str = "resources/config.json";
 static IMAGE_FILE_KEY: &str = "image_path";
-static SLICES_COUNT_KEY: &str = "slices_count";
 static FRAME_TIME_KEY: &str = "frame_time";
 
 static SHIMMER_CONFIG_FREQ_KEY: &str = "shimmer_config";
@@ -53,12 +52,13 @@ pub enum ShimmerType {
 }
 
 impl FromStr for ShimmerType {
-    type Err = ();
+    type Err = String;
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         match input {
             "NMStripe" => Ok(ShimmerType::NMStripe),
-            _ => Err(()),
+            "Array" => Ok(ShimmerType::Array),
+            e => Err(format!("ShimmerType is on unknown type:{}", e)),
         }
     }
 }
