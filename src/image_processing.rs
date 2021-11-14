@@ -84,7 +84,7 @@ impl DimmerApplicationState {
         let curr_time = DimmerApplicationState::curr_msecs();
         let config_array = config.get("array").unwrap().to_owned();
         let config_array = config_array.into_array().unwrap();
-        let stripe_count = config.get("stripes_count").unwrap().to_owned().into_int().unwrap();
+        let stripe_count = config_array.len();
         let strip_wight = bit_state.len() / stripe_count as usize;
         let time_passed: u128 = curr_time - misc_state;
 
@@ -92,13 +92,14 @@ impl DimmerApplicationState {
             let stripe_config = stripe.into_table().unwrap();
             let time = stripe_config.get("time").unwrap().to_owned().into_int().unwrap();
             let duration = stripe_config.get("delay").unwrap().to_owned().into_int().unwrap();
+            let transparency = stripe_config.get("trans").unwrap().to_owned().into_float().unwrap() as f32;
             let phase_duration = (time + duration) as u128;
             let phase = time_passed % phase_duration;
 
 
             for j in 00..strip_wight {
                 let mut vec = &mut bit_state[i * strip_wight + j];
-                vec.x = if phase > time as u128 { 0. } else { 1. };
+                vec.x = if phase > time as u128 { 0. } else { transparency };
             }
         }
     }
